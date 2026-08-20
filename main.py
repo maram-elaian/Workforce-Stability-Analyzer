@@ -16,3 +16,7 @@ print("Total Missing Values:", df.isnull().sum().sum())
 # ====================================================DUPLICATE ROWS
 print("Duplicate Rows:")
 print(df.duplicated().sum())
+# ========================DELETE COLUMN
+print(df.nunique().sort_values()) # BASED  on this we drop column
+
+
