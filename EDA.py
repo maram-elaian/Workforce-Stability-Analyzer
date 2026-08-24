@@ -87,3 +87,29 @@ plt.xlabel("Department")
 plt.ylabel("Number of Employees")
 plt.tight_layout()
 plt.show()
+# JOB RULE
+print(df["JobRole"].value_counts())
+plt.figure(figsize=(10, 6))
+JRx = sns.countplot(
+    data=df,
+    y="JobRole",
+    order=df["JobRole"].value_counts().index
+)
+plt.title("Employee Distribution by Job Role")
+plt.xlabel("Number of Employees")
+plt.ylabel("Job Role")
+plt.tight_layout()
+plt.show()
+print(df["MonthlyIncome"].describe())
+plt.figure(figsize=(8, 5))
+sns.histplot(
+    data=df,
+    x="MonthlyIncome",
+    bins=30,
+    kde=True
+)
+plt.title("Monthly Income Distribution")
+plt.xlabel("Monthly Income")
+plt.ylabel("Number of Employees")
+plt.tight_layout()
+plt.show()
