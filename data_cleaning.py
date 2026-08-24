@@ -36,3 +36,5 @@ print(df["BusinessTravel"].unique())
 # ==================================outliers
 sns.boxplot(x=df["MonthlyIncome"])
 plt.show()
+df.to_csv("WA_Fn-UseC_-HR-Employee-Attrition.csv", index=False)
+
