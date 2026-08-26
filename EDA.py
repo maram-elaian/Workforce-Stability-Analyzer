@@ -5,7 +5,7 @@ df = pd.read_csv("WA_Fn-UseC_-HR-Employee-Attrition_clean.csv")
 # ============================== Dataset Overview ============================
 print(df.shape)
 print(df.head())
-df.info()
+print(df.info())
 print(df.describe())
 # ============================== Attrition KPI ===============================
 # Total Employees
