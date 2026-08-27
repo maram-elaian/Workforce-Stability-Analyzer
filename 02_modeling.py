@@ -90,3 +90,17 @@ os.makedirs('models', exist_ok=True)
 
 joblib.dump(model_pipeline, 'models/attrition_model.pkl')
 print("\n💾 تم حفظ النموذج بنجاح في: models/attrition_model.pkl")
+
+# ============================================
+# حفظ قائمة الأعمدة التي استخدمها النموذج
+# ============================================
+import json
+
+# استخراج أسماء الأعمدة الأصلية (قبل المعالجة)
+original_columns = X.columns.tolist()
+
+with open('models/model_columns.json', 'w') as f:
+    json.dump(original_columns, f, indent=2)
+
+print(f"\n💾 تم حفظ {len(original_columns)} اسم عمود في: models/model_columns.json")
+print("✅ الأعمدة المحفوظة:", original_columns[:5], "...")
