@@ -83,8 +83,8 @@ workforce-stability-analyzer/
 
 | | |
 |---|---|
-| **Sadeen Abdelrahman** | Data Analyst & Dashboard Developer — data prep, EDA, visualization, Streamlit app |
-| **Maram Ashraf** | Machine Learning Engineer — modeling, evaluation, SHAP analysis, prediction pipeline |
+| **Sadeen Abdelrahman** | Data Analyst & Dashboard Developer — data prep, EDA, visualization |
+| **Maram Ashraf** | Machine Learning Engineer — modeling, evaluation, SHAP analysis, prediction pipeline,Streamlit app |
 
 ---
 
