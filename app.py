@@ -11,99 +11,142 @@ from pathlib import Path
 # PAGE CONFIG
 # ============================================================
 st.set_page_config(
-    page_title="Workforce-Stability-Analyzer",
+    page_title="Workforce Stability Analyzer",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ============================================================
-# CUSTOM CSS (تم إصلاح مشكلة الخطوط البيضاء والتباين)
+# NEW CUSTOM CSS (Burgundy & Black Theme)
 # ============================================================
-st.markdown("""
+# تم تحديث الألوان هنا لتطابق الصورة تماماً
+primary_burgundy = "#6B0103"  # لون البورغندي الأساسي
+dark_bg = "#000000"  # خلفية داكنة جداً
+card_bg = "#111111"  # خلفية البطاقات
+text_light = "#FFFFFF"  # نص أبيض
+text_muted = "#AAAAAA"  # نص رمادي خافت
+
+st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    /* Global Font & Background */
-    html, body, [class*="css"] {
+    /* Global Font & Main Background */
+    html, body, [class*="css"] {{
         font-family: 'Inter', sans-serif !important;
-    }
-    .stApp {
-        background-color: #F8FAFC;
-    }
+        background-color: {dark_bg};
+        color: {text_light};
+    }}
+    .stApp {{
+        background-color: {dark_bg};
+    }}
 
-    /* Sidebar Styling - Fixed Visibility */
-    section[data-testid="stSidebar"] {
-        background-color: #0F172A !important;
-    }
+    /* Sidebar Styling - Dark & High Contrast */
+    section[data-testid="stSidebar"] {{
+        background-color: {card_bg} !important;
+        border-right: 1px solid #222;
+    }}
     section[data-testid="stSidebar"] .stSelectbox label,
     section[data-testid="stSidebar"] .stSlider label,
     section[data-testid="stSidebar"] p,
-    section[data-testid="stSidebar"] div {
-        color: #E2E8F0 !important;
-    }
-    /* Fix dropdown text color in sidebar */
-    section[data-testid="stSidebar"] .st-ak { 
-        color: #0F172A !important; 
-    }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] div {{
+        color: {text_light} !important;
+    }}
+    /* Fix dropdown visibility in sidebar */
+    section[data-testid="stSidebar"] .st-ak {{ 
+        color: {dark_bg} !important; 
+    }}
+    /* Sidebar Title Style */
+    .sidebar-title {{
+        font-weight: 800; font-size: 1.2rem; color: {primary_burgundy} !important; margin-bottom: 0.5rem;
+    }}
+    .sidebar-subtitle {{
+        font-size: 0.85rem; color: {text_muted} !important; margin-bottom: 1rem;
+    }}
 
     /* Header */
-    .dashboard-header {
-        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-        padding: 28px 32px;
-        border-radius: 16px;
-        margin-bottom: 25px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-    .dashboard-header h1 { color: #FFFFFF; font-size: 28px; font-weight: 800; margin: 0; }
-    .dashboard-header p { color: #94A3B8; margin-top: 8px; font-size: 14px; }
-
-    /* KPI Cards - Fixed Borders & Shadows */
-    .kpi-card {
-        background: #FFFFFF;
+    .dashboard-header {{
+        background: linear-gradient(135deg, {primary_burgundy} 0%, #330000 100%);
+        padding: 30px;
         border-radius: 12px;
-        padding: 20px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        min-height: 110px;
-    }
-    .kpi-label { font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; }
-    .kpi-value { font-size: 26px; font-weight: 800; color: #0F172A; margin-top: 8px; }
-    .kpi-description { font-size: 11px; color: #94A3B8; margin-top: 4px; }
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(107, 1, 3, 0.3);
+    }}
+    .dashboard-header h1 {{ color: #FFFFFF; font-size: 32px; font-weight: 800; margin: 0; }}
+    .dashboard-header p {{ color: #FFCCCC; margin-top: 8px; font-size: 15px; opacity: 0.9; }}
 
-    /* Section Titles */
-    .section-title {
-        font-size: 18px; font-weight: 700; color: #0F172A;
-        margin-top: 35px; margin-bottom: 15px;
-        padding-bottom: 8px; border-bottom: 2px solid #E2E8F0;
-    }
+    /* KPI Cards - Glassmorphism style on dark */
+    .kpi-card {{
+        background: {card_bg};
+        border-radius: 10px;
+        padding: 25px;
+        border: 1px solid #222;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        transition: transform 0.2s;
+    }}
+    .kpi-card:hover {{
+        transform: translateY(-3px);
+        border-color: {primary_burgundy};
+    }}
+    .kpi-label {{ font-size: 13px; font-weight: 600; color: {text_muted}; text-transform: uppercase; letter-spacing: 1px; }}
+    .kpi-value {{ font-size: 32px; font-weight: 800; color: #FFFFFF; margin-top: 5px; }}
+    .kpi-description {{ font-size: 11px; color: #777777; margin-top: 4px; }}
 
-    /* Insight Cards */
-    .insight-card {
-        background: #FFFFFF; border-radius: 10px; padding: 16px;
-        margin-bottom: 10px; border-left: 4px solid #6366F1;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04); color: #334155; font-size: 13px;
-    }
+    /* Section Titles with Burgundy underline */
+    .section-title {{
+        font-size: 20px; font-weight: 700; color: #FFFFFF;
+        margin-top: 40px; margin-bottom: 20px;
+        padding-bottom: 10px; border-bottom: 3px solid {primary_burgundy};
+    }}
 
-    /* Risk Cards */
-    .risk-high { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 24px; border-radius: 12px; text-align: center; }
-    .risk-medium { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 24px; border-radius: 12px; text-align: center; }
-    .risk-low { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; padding: 24px; border-radius: 12px; text-align: center; }
-    .risk-number { font-size: 40px; font-weight: 800; margin: 10px 0; }
-    .risk-label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    /* Insight Cards - Burgundy accents */
+    .insight-card {{
+        background: {card_bg}; border-radius: 8px; padding: 18px;
+        margin-bottom: 12px; border-left: 5px solid {primary_burgundy};
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2); color: {text_light}; font-size: 14px;
+    }}
 
-    /* Dataframe & Metrics Visibility Fix */
-    .stDataFrame { border: 1px solid #E2E8F0 !important; border-radius: 8px !important; }
-    div[data-testid="stMetricValue"] { color: #0F172A !important; font-weight: 700 !important; }
-    div[data-testid="stMetricLabel"] { color: #64748B !important; font-weight: 600 !important; }
+    /* Risk Cards - High Contrast on Dark */
+    .risk-high {{ background: #330000; border: 2px solid #FF0000; color: #FFCCCC; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 0 15px rgba(255,0,0,0.2); }}
+    .risk-medium {{ background: #331A00; border: 2px solid #FFA500; color: #FFE0B3; padding: 25px; border-radius: 12px; text-align: center; }}
+    .risk-low {{ background: #001A00; border: 2px solid #00FF00; color: #B3FFB3; padding: 25px; border-radius: 12px; text-align: center; }}
+    .risk-number {{ font-size: 48px; font-weight: 800; margin: 10px 0; }}
+    .risk-label {{ font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #FFFFFF; }}
+
+    /* Dataframe Visibility Fix on Dark */
+    .stDataFrame {{ background-color: {card_bg}; border: 1px solid #222 !important; border-radius: 8px !important; color: {text_light}; }}
+    div[data-testid="stMetricValue"] {{ color: {text_light} !important; font-weight: 700 !important; }}
+    div[data-testid="stMetricLabel"] {{ color: {text_muted} !important; font-weight: 600 !important; }}
+
+    /* Buttons */
+    .stButton>button {{
+        background-color: {primary_burgundy} !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: none !important;
+        padding: 10px 20px !important;
+        font-weight: 600 !important;
+        width: 100%;
+    }}
+    .stButton>button:hover {{
+        background-color: #880000 !important;
+        box-shadow: 0 0 10px rgba(107, 1, 3, 0.5) !important;
+    }}
 
     /* Footer */
-    .footer { text-align: center; color: #94A3B8; font-size: 11px; padding: 30px 0 10px; border-top: 1px solid #E2E8F0; margin-top: 40px; }
+    .footer {{ text-align: center; color: #555555; font-size: 12px; padding: 30px 0; border-top: 1px solid #222; margin-top: 50px; }}
 </style>
 """, unsafe_allow_html=True)
 
+# Define a custom color palette for charts to match
+chart_colors = [primary_burgundy, "#FF4444", "#FFAAAA", "#330000"]
+plot_template = "plotly_dark"
+
 # ============================================================
-# FILE PATHS (مطابقة تماماً لمخرجات أكوادك)
+# FILE PATHS
 # ============================================================
 DATA_PATH = "WA_Fn-UseC_-HR-Employee-Attrition_clean.csv"
 MODEL_PATH = "models/attrition_model.pkl"
@@ -117,10 +160,9 @@ SHAP_FOLDER = Path("assets/shap_plots")
 @st.cache_data
 def load_data():
     if not Path(DATA_PATH).exists():
-        st.error(f"⚠️ ملف البيانات غير موجود: `{DATA_PATH}`\nيرجى تشغيل كود تنظيف البيانات أولاً.")
+        st.error(f"⚠️ ملف البيانات غير موجود: `{DATA_PATH}`")
         st.stop()
     df = pd.read_csv(DATA_PATH)
-    # إعادة إنشاء AgeGroup ليتطابق مع كود التحليل الخاص بك
     if "Age" in df.columns and "AgeGroup" not in df.columns:
         df["AgeGroup"] = pd.cut(df["Age"], bins=[17, 25, 35, 45, 55, 65],
                                 labels=["18-25", "26-35", "36-45", "46-55", "56-65"])
@@ -129,19 +171,16 @@ def load_data():
 
 @st.cache_resource
 def load_model():
-    if not Path(MODEL_PATH).exists():
-        return None
+    if not Path(MODEL_PATH).exists(): return None
     try:
         return joblib.load(MODEL_PATH)
-    except Exception as e:
-        st.error(f"فشل تحميل النموذج: {e}")
+    except:
         return None
 
 
 @st.cache_data
 def load_model_columns():
-    if not Path(COLUMNS_PATH).exists():
-        return None
+    if not Path(COLUMNS_PATH).exists(): return None
     try:
         with open(COLUMNS_PATH, "r") as f:
             return json.load(f)
@@ -157,23 +196,19 @@ model_columns = load_model_columns()
 # SIDEBAR & FILTERS
 # ============================================================
 with st.sidebar:
-    st.markdown('<div class="sidebar-title">◉Workforce-Stability-Analyzer</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-subtitle">Employee Attrition Intelligence</div>', unsafe_allow_html=True)
-
+    st.markdown('<div class="sidebar-title">◉ Workforce Stability</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-subtitle">By: Maram Ashraf & Sadeen Abdulrahman</div>', unsafe_allow_html=True)
-    st.markdown("---")
     st.markdown("---")
 
     page = st.radio("Navigation", [
         "📊 Executive Overview", "👥 Workforce Analytics",
         "⚠️ Attrition Drivers", "🤖 AI Risk Prediction", "🧠 Explainable AI"
-    ], label_visibility="collapsed")
+    ])
 
     st.markdown("---")
-    st.markdown("### Filters")
+    st.markdown("### 🔍 Filters")
 
 
-    # دالة مساعدة للفلاتر الديناميكية
     def filter_selectbox(col_name):
         if col_name in df.columns:
             opts = ["All"] + sorted(df[col_name].dropna().unique().tolist())
@@ -210,16 +245,19 @@ if filtered_df.empty:
 # ============================================================
 st.markdown("""
 <div class="dashboard-header">
-    <h1>Workforce-Stability-Analyzer</h1>
-    <p>Data-driven workforce analytics, predictive risk assessment, and explainable AI.</p>
+    <h1>Workforce Stability Analyzer</h1>
+    <p>Predictive HR Intelligence Dashboard</p>
 </div>
 """, unsafe_allow_html=True)
 
 
-# Helper for KPIs
+# Helpers
 def kpi(title, value, desc):
     st.markdown(f"""
     <div class="kpi-card">
+        <div class="kpi-label">{title}</div>
+        <div class="kpi-value">{value}</div>
+        <div class="kpi-description">{desc}<div class="kpi-card">
         <div class="kpi-label">{title}</div>
         <div class="kpi-value">{value}</div>
         <div class="kpi-description">{desc}</div>
@@ -230,7 +268,6 @@ def section(title):
     st.markdown(f'<div class="section-title">{title}</div>', unsafe_allow_html=True)
 
 
-# دالة محسنة لحساب معدل التسرب (أسرع وأدق من apply)
 def calc_rate(data, group_col):
     temp = data.copy()
     temp["Attrition_Num"] = (temp["Attrition"] == "Yes").astype(int)
@@ -248,236 +285,240 @@ if page == "📊 Executive Overview":
 
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        kpi("Total Employees", f"{total_emp:,}", "Current filtered workforce")
+        kpi("Workforce", f"{total_emp:,}", "Total employees")
     with c2:
-        kpi("Employees Left", f"{emp_left:,}", "Total attrition count")
+        kpi("Attrition", f"{emp_left:,}", "Employees left")
     with c3:
-        kpi("Attrition Rate", f"{attrition_rate:.1f}%", "Overall attrition percentage")
+        kpi("Churn Rate", f"{attrition_rate:.1f}%", "Overall percentage")
     with c4:
-        kpi("Avg. Monthly Income", f"${filtered_df['MonthlyIncome'].mean():,.0f}", "Average salary")
+        kpi("Avg Income", f"${filtered_df['MonthlyIncome'].mean():,.0f}", "Monthly salary")
 
-    section("Attrition Distribution")
+    section("Attrition Snapshot")
     col1, col2 = st.columns(2)
 
     with col1:
+        # Pie chart with Burgundy colors
         counts = filtered_df["Attrition"].value_counts().reset_index(name="Count")
-        fig = px.pie(counts, names="Attrition", values="Count", hole=0.6,
-                     color_discrete_sequence=["#10B981", "#EF4444"], template="plotly_white")
-        fig.update_traces(textposition='inside', textinfo='percent+label')
-        fig.update_layout(height=350, margin=dict(t=20, b=20))
+        fig = px.pie(counts, names="Attrition", values="Count", hole=0.7,
+                     color="Attrition", color_discrete_map={"No": "#444444", "Yes": primary_burgundy},
+                     template=plot_template)
+        fig.update_traces(textposition='outside', textinfo='percent+label', pull=[0, 0.1])
+        fig.update_layout(height=400, showlegend=False, margin=dict(t=40, b=40, l=40, r=40))
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
+        # Bar chart with Burgundy gradient
         dept_rate = calc_rate(filtered_df, "Department")
         fig = px.bar(dept_rate, x="Attrition Rate", y="Department", orientation="h",
                      text=dept_rate["Attrition Rate"].round(1).astype(str) + "%",
-                     color="Attrition Rate", color_continuous_scale="Reds", template="plotly_white")
-        fig.update_traces(textposition="inside")
-        fig.update_layout(height=350, margin=dict(t=20, b=20))
+                     color="Attrition Rate", color_continuous_scale=[[0, "#330000"], [1, primary_burgundy]],
+                     template=plot_template)
+        fig.update_traces(textposition="outside")
+        fig.update_layout(height=400, coloraxis_showscale=False, yaxis={'categoryorder': 'total ascending'})
         st.plotly_chart(fig, use_container_width=True)
 
-    section("Key Business Insights")
+    section("Key Observations")
     insights = []
     ot_rate = calc_rate(filtered_df, "OverTime").set_index("OverTime")["Attrition Rate"]
     if not ot_rate.empty:
         insights.append(
-            f"Employees with **{ot_rate.idxmax()}** overtime have the highest attrition rate (**{ot_rate.max():.1f}%**).")
+            f"Attrition among **{ot_rate.idxmax()}** overtime workers is critically high at **{ot_rate.max():.1f}%**.")
 
     job_rate = calc_rate(filtered_df, "JobRole").set_index("JobRole")["Attrition Rate"]
     if not job_rate.empty:
-        top_job = job_rate.idxmax()
-        insights.append(f"**{top_job}** role shows the highest attrition rate at **{job_rate.max():.1f}%**.")
-
-    if "AgeGroup" in filtered_df.columns:
-        age_rate = calc_rate(filtered_df, "AgeGroup").set_index("AgeGroup")["Attrition Rate"]
-        if not age_rate.empty:
-            insights.append(f"The **{age_rate.idxmax()}** age group is the most vulnerable to attrition.")
+        insights.append(f"**{job_rate.idxmax()}** is the role with the highest turnover (**{job_rate.max():.1f}%**).")
 
     for ins in insights:
-        st.markdown(f'<div class="insight-card">💡 {ins}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="insight-card">⚠️ {ins}</div>', unsafe_allow_html=True)
 
 # ============================================================
-# PAGE 2: WORKFORCE ANALYTICS (مطابق لتحليلاتك)
+# PAGE 2: WORKFORCE ANALYTICS
 # ============================================================
 elif page == "👥 Workforce Analytics":
-    section("Demographics & Compensation")
-    col1, col2 = st.columns(2)
+    section("Key Metrics by Attrition State")
 
+
+    # Custom styling for boxes to be Burgundy
+    def make_box_plot(y_col, title):
+        fig = px.box(filtered_df, x="Attrition", y=y_col, color="Attrition",
+                     color_discrete_map={"No": "#888888", "Yes": primary_burgundy},
+                     title=title, template=plot_template, points="outliers")
+        fig.update_layout(height=380, showlegend=False)
+        return fig
+
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.plotly_chart(make_box_plot("MonthlyIncome", "Income Distribution"), use_container_width=True)
+    with c2:
+        st.plotly_chart(make_box_plot("YearsAtCompany", "Tenure at Company"), use_container_width=True)
+    with c3:
+        st.plotly_chart(make_box_plot("DistanceFromHome", "Distance from Home"), use_container_width=True)
+
+    col1, col2 = st.columns([2, 1])
     with col1:
-        fig = px.box(filtered_df, x="Attrition", y="MonthlyIncome", color="Attrition",
-                     title="Monthly Income by Attrition", template="plotly_white")
-        fig.update_layout(height=400)
-        st.plotly_chart(fig, use_container_width=True)
-
-    with col2:
-        fig = px.box(filtered_df, x="Attrition", y="YearsAtCompany", color="Attrition",
-                     title="Years at Company by Attrition", template="plotly_white")
-        fig.update_layout(height=400)
-        st.plotly_chart(fig, use_container_width=True)
-
-    col1, col2 = st.columns(2)
-    with col1:
-        fig = px.box(filtered_df, x="Attrition", y="DistanceFromHome", color="Attrition",
-                     title="Distance From Home by Attrition", template="plotly_white")
-        fig.update_layout(height=400)
-        st.plotly_chart(fig, use_container_width=True)
-
-    with col2:
         if "JobSatisfaction" in filtered_df.columns:
             sat_rate = calc_rate(filtered_df, "JobSatisfaction")
             sat_rate["JobSatisfaction"] = sat_rate["JobSatisfaction"].astype(str)
             fig = px.bar(sat_rate, x="JobSatisfaction", y="Attrition Rate", text="Attrition Rate",
-                         title="Attrition Rate by Job Satisfaction Level", template="plotly_white",
-                         color="Attrition Rate", color_continuous_scale="Reds")
+                         title="Attrition Rate vs Job Satisfaction", template=plot_template,
+                         color_discrete_sequence=[primary_burgundy])
             fig.update_traces(texttemplate='%{y:.1f}%', textposition="outside")
             fig.update_layout(height=400)
             st.plotly_chart(fig, use_container_width=True)
+    with col2:
+        st.markdown('<div style="margin-top:40px"></div>', unsafe_allow_html=True)
+        kpi("Median Income", f"${filtered_df['MonthlyIncome'].median():,.0f}", "Filtered median")
+        kpi("Avg Tenure", f"{filtered_df['YearsAtCompany'].mean():.1f} Yrs", "Filtered average")
 
 # ============================================================
 # PAGE 3: ATTRITION DRIVERS
 # ============================================================
 elif page == "⚠️ Attrition Drivers":
-    section("Interactive Driver Analysis")
-    drivers = ["OverTime", "JobRole", "Department", "AgeGroup", "BusinessTravel", "MaritalStatus"]
+    section("Deep Dive into Drivers")
+    drivers = ["OverTime", "JobRole", "Department", "AgeGroup", "BusinessTravel", "MaritalStatus", "EducationField"]
     valid_drivers = [d for d in drivers if d in filtered_df.columns]
 
-    sel_driver = st.selectbox("Select Factor to Analyze", valid_drivers)
+    c1, c2 = st.columns([1, 4])
+    with c1:
+        sel_driver = st.radio("Analyze Factor:", valid_drivers)
 
-    driver_data = calc_rate(filtered_df, sel_driver)
-    # تحويل الأعمدة لنص لضمان عرضها بشكل صحيح
-    driver_data[sel_driver] = driver_data[sel_driver].astype(str)
+    with c2:
+        driver_data = calc_rate(filtered_df, sel_driver)
+        driver_data[sel_driver] = driver_data[sel_driver].astype(str)
 
-    fig = px.bar(driver_data, x="Attrition Rate", y=sel_driver, orientation="h",
-                 text=driver_data["Attrition Rate"].round(1).astype(str) + "%",
-                 color="Attrition Rate", color_continuous_scale="Reds", template="plotly_white")
-    fig.update_traces(textposition="inside")
-    fig.update_layout(height=500, margin=dict(l=20, r=40, t=40, b=20))
-    st.plotly_chart(fig, use_container_width=True)
+        fig = px.bar(driver_data, x="Attrition Rate", y=sel_driver, orientation="h",
+                     text=driver_data["Attrition Rate"].round(1).astype(str) + "%",
+                     color="Attrition Rate",
+                     color_continuous_scale=[[0, "#222222"], [1, primary_burgundy]],
+                     template=plot_template, title=f"Turnover Rate by {sel_driver}")
+        fig.update_traces(textposition="outside")
+        fig.update_layout(height=550, coloraxis_showscale=False, yaxis={'categoryorder': 'total ascending'})
+        st.plotly_chart(fig, use_container_width=True)
 
 # ============================================================
-# PAGE 4: AI RISK PREDICTION (مرتبط ديناميكياً بنموذجك)
+# PAGE 4: AI RISK PREDICTION
 # ============================================================
 elif page == "🤖 AI Risk Prediction":
-    section("AI Employee Risk Prediction")
+    section("Individual Attrition Risk Predictor")
 
-    if model is None:
-        st.error("⚠️ النموذج غير موجود. يرجى تشغيل كود تدريب النموذج أولاً لإنشاء `models/attrition_model.pkl`")
+    if model is None or model_columns is None:
+        st.error("⚠️ AI Assets Mising. Ensure model and columns JSON exist.")
         st.stop()
 
-    st.info("أدخل بيانات الموظف أدناه لتقدير احتمالية تركه للعمل بناءً على النموذج المدرب.")
-
-    # تحديد الأعمدة المطلوبة ديناميكياً من ملف JSON الذي حفظه كودك
-    if model_columns:
-        # استبعاد الأعمدة التي حذفها كودك والأعمدة غير المطلوبة للتنبؤ
-        exclude_cols = ['Attrition', 'EmployeeNumber', 'Over18', 'StandardHours', 'EmployeeCount', 'AgeGroup']
+    with st.expander("ℹ️ Input Employee Details", expanded=True):
+        exclude_cols = ['Attrition', 'EmployeeNumber', 'Over18', 'StandardHours', 'EmployeeCount', 'AgeGroup',
+                        'EmployeeCount']
         prediction_cols = [col for col in model_columns if col not in exclude_cols and col in df.columns]
-    else:
-        st.error("ملف model_columns.json غير موجود.")
-        st.stop()
 
-    with st.form("prediction_form"):
-        input_values = {}
-        cols = st.columns(3)
+        with st.form("prediction_form"):
+            input_values = {}
+            cols = st.columns(3)
 
-        for idx, col in enumerate(prediction_cols):
-            with cols[idx % 3]:
-                if pd.api.types.is_numeric_dtype(df[col]):
-                    val = st.number_input(col, min_value=float(df[col].min()),
-                                          max_value=float(df[col].max()),
-                                          value=float(df[col].median()))
-                    input_values[col] = val
-                else:
-                    opts = sorted(df[col].dropna().astype(str).unique().tolist())
-                    val = st.selectbox(col, opts)
-                    input_values[col] = val
+            for idx, col in enumerate(prediction_cols):
+                with cols[idx % 3]:
+                    if pd.api.types.is_numeric_dtype(df[col]):
+                        val = st.number_input(col, value=float(df[col].median()))
+                        input_values[col] = val
+                    else:
+                        opts = sorted(df[col].dropna().astype(str).unique().tolist())
+                        val = st.selectbox(col, opts)
+                        input_values[col] = val
 
-        submit = st.form_submit_button("🔮 Predict Attrition Risk", use_container_width=True)
+            st.markdown('<div style="margin-top:20px"></div>', unsafe_allow_html=True)
+            submit = st.form_submit_button("Run AI Risk Assessment")
 
     if submit:
         try:
-            # إنشاء DataFrame وتطابقه تماماً مع أعمدة التدريب
-            input_df = pd.DataFrame([input_values])
-
-            # إعادة ترتيب الأعمدة لتطابق model_columns تماماً (مع ملء المفقود بـ 0 أو القيمة الافتراضية)
-            # هذا يمنع أخطاء التنبؤ الناتجة عن اختلاف ترتيب أو وجود الأعمدة
+            # Match columns exactly
             final_input = pd.DataFrame(columns=model_columns)
+            temp_input = pd.DataFrame([input_values])
             for col in model_columns:
-                if col in input_df.columns:
-                    final_input[col] = input_df[col].values
+                if col in temp_input.columns:
+                    final_input[col] = temp_input[col].values
                 else:
-                    final_input[col] = 0  # أو القيمة الافتراضية المناسبة
+                    final_input[col] = 0
 
-            # التنبؤ
-            prediction = model.predict(final_input)[0]
-            proba = model.predict_proba(final_input)[0]
-            probability = proba[1] if len(proba) > 1 else proba[0]
+            proba = model.predict_proba(final_input)[0][1]
 
-            if probability >= 0.70:
+            if proba >= 0.70:
                 risk, css, icon = "HIGH RISK", "risk-high", "🔴"
-            elif probability >= 0.40:
+            elif proba >= 0.40:
                 risk, css, icon = "MEDIUM RISK", "risk-medium", "🟠"
             else:
                 risk, css, icon = "LOW RISK", "risk-low", "🟢"
 
-            st.markdown(f"""
-            <div class="{css}">
-                <div class="risk-label">{icon} {risk}</div>
-                <div class="risk-number">{probability * 100:.1f}%</div>
-                <div>Probability of Employee Attrition</div>
-            </div>""", unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">Assessment Result</div>', unsafe_allow_html=True)
 
-            c1, c2 = st.columns(2)
+            c1, c2 = st.columns([1, 1])
             with c1:
-                st.metric("Prediction", "Likely to Leave" if prediction == 1 else "Likely to Stay")
+                st.markdown(f"""
+                <div class="{css}">
+                    <div class="risk-label">{icon} {risk}</div>
+                    <div class="risk-number">{proba * 100:.1f}%</div>
+                    <div style="font-size:12px; opacity:0.8">Calculated Attrition Probability</div>
+                </div>""", unsafe_allow_html=True)
+
             with c2:
-                st.metric("Stay Probability", f"{(1 - probability) * 100:.1f}%")
+                # Gauge chart in Burgundy
+                fig = go.Figure(go.Indicator(
+                    mode="gauge+number",
+                    value=proba * 100,
+                    domain={'x': [0, 1], 'y': [0, 1]},
+                    title={'text': "Risk Score", 'font': {'size': 20, 'color': text_light}},
+                    gauge={
+                        'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': text_muted},
+                        'bar': {'color': primary_burgundy},
+                        'bgcolor': "#222",
+                        'borderwidth': 2,
+                        'bordercolor': "#444",
+                        'steps': [
+                            {'range': [0, 40], 'color': '#003300'},
+                            {'range': [40, 70], 'color': '#664400'},
+                            {'range': [70, 100], 'color': '#440000'}],
+                    }
+                ))
+                fig.update_layout(paper_bgcolor=dark_bg, plot_bgcolor=dark_bg, height=250, margin=dict(t=50, b=20))
+                st.plotly_chart(fig, use_container_width=True)
 
         except Exception as e:
-            st.error(f"فشل التنبؤ. تأكد من تطابق البيانات: {e}")
+            st.error(f"Prediction Error: {e}")
 
 # ============================================================
-# PAGE 5: EXPLAINABLE AI (مربوط بمخرجات كود SHAP الخاص بك)
+# PAGE 5: EXPLAINABLE AI
 # ============================================================
 elif page == "🧠 Explainable AI":
-    section("Explainable AI (SHAP Analysis)")
-    st.markdown("فهم العوامل المؤثرة في قرارات النموذج باستخدام تحليل SHAP.")
+    section("AI Model Explainability (SHAP)")
 
     if not SHAP_FOLDER.exists():
-        st.warning("⚠️ مجلد `assets/shap_plots` غير موجود. يرجى تشغيل كود تحليل SHAP أولاً.")
+        st.warning("⚠️ SHAP plots folder missing.")
     else:
-        col1, col2 = st.columns(2)
-        with col1:
+        st.markdown(
+            '<div class="insight-card">SHAP analysis helps understand which features most influence the AI model\'s predictions, providing transparency.</div>',
+            unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+        with c1:
             if Path(SHAP_FOLDER / "01_feature_importance.png").exists():
-                st.image(str(SHAP_FOLDER / "01_feature_importance.png"), caption="Top Factors Influencing Attrition",
+                st.image(str(SHAP_FOLDER / "01_feature_importance.png"), caption="Global Feature Importance",
                          use_container_width=True)
-        with col2:
+        with c2:
             if Path(SHAP_FOLDER / "02_shap_detailed.png").exists():
-                st.image(str(SHAP_FOLDER / "02_shap_detailed.png"), caption="Feature Impact (Beeswarm Plot)",
+                st.image(str(SHAP_FOLDER / "02_shap_detailed.png"), caption="Feature Impact (Beeswarm)",
                          use_container_width=True)
 
         if Path(SHAP_FOLDER / "03_individual_prediction.png").exists():
-            section("Individual Case Analysis")
-            st.image(str(SHAP_FOLDER / "03_individual_prediction.png"), caption="Why did this specific employee leave?",
+            st.markdown('<div style="margin-top:30px"></div>', unsafe_allow_html=True)
+            st.image(str(SHAP_FOLDER / "03_individual_prediction.png"), caption="Local Explanation (Single Case)",
                      use_container_width=True)
-
-        if Path(SHAP_FOLDER / "top_10_features.csv").exists():
-            section("Top 10 Attrition Factors (Data)")
-            top_df = pd.read_csv(SHAP_FOLDER / "top_10_features.csv")
-            st.dataframe(top_df, use_container_width=True, hide_index=True)
 
 # ============================================================
 # FOOTER
 # ============================================================
-st.markdown('<div class="footer">HR Attrition Intelligence System • Built with Streamlit & Scikit-Learn</div>',
-            unsafe_allow_html=True)
-
-st.markdown(
-    """
+st.markdown(f"""
     <div class="footer">
-        © 2026 All rights reserved | Designed and developed by: <b>Maram Ashraf</b> & <b>Sadeen Abdulrahman</b> 
+        © 2026 Workforce Stability Analyzer | System Design by <b>Maram Ashraf</b> & <b>Sadeen Abdulrahman</b> 
         <br>
-        <span style="opacity: 0.7; font-size: 10px;">HR Attrition Intelligence System • Built with Streamlit, Scikit-Learn & SHAP</span>
+        <span style="opacity: 0.5; font-size: 10px;">Built with Streamlit & Plotly in Burgundy-Dark Theme</span>
     </div>
-    """,
-    unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
