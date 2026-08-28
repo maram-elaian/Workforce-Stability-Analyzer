@@ -171,10 +171,13 @@ def load_data():
 
 @st.cache_resource
 def load_model():
-    if not Path(MODEL_PATH).exists(): return None
+    if not Path(MODEL_PATH).exists():
+        st.warning(f"Model file not found at: {MODEL_PATH}")
+        return None
     try:
         return joblib.load(MODEL_PATH)
-    except:
+    except Exception as e:
+        st.exception(e)
         return None
 
 
