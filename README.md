@@ -56,7 +56,7 @@ A **Streamlit** dashboard brings it all together: workforce overview, attrition 
 ## ⚙️ Getting Started
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/workforce-stability-analyzer.git
+git clone(https://github.com/maram-elaian/Workforce-Stability-Analyzer.git)
 cd workforce-stability-analyzer
 pip install -r requirements.txt
 streamlit run app.py
@@ -83,7 +83,7 @@ workforce-stability-analyzer/
 
 | | |
 |---|---|
-| **Sadeen Abdelrahman** | Data Analyst & Dashboard Developer — data prep, EDA, visualization |
+| **Sadeen Abdelrahman** | Data Analyst — data prep, EDA, visualization |
 | **Maram Ashraf** | Machine Learning Engineer — modeling, evaluation, SHAP analysis, prediction pipeline,Streamlit app |
 
 ---
